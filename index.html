@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computing Science Portal - Login</title>
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-card { background: #ffffff; padding: 2.5rem; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); width: 100%; max-width: 400px; }
+    .brand { text-align: center; margin-bottom: 2rem; }
+    .brand h1 { margin: 0; font-size: 1.5rem; color: #0f172a; font-weight: 700; }
+    .brand p { margin: 4px 0 0; color: #64748b; font-size: 0.875rem; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.875rem; font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
+    input, select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
+    button { width: 100%; padding: 0.75rem; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 0.5rem; }
+    button:hover { background: #1d4ed8; }
+  </style>
+</head>
+<body>
+
+  <div class="login-card">
+    <div class="brand">
+      <h1>Computing Science Portal</h1>
+      <p>Sign in to access your feedback workspace</p>
+    </div>
+
+    <div class="form-group">
+      <label for="user-role">Account Type</label>
+      <select id="user-role">
+        <option value="teacher">Teacher</option>
+        <option value="pupil">Pupil</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username / Pupil Code</label>
+      <input type="text" id="username" placeholder="e.g. Teacher ID or Pupil Code">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password (leave blank if 1st pupil login)">
+    </div>
+
+    <button onclick="handleLogin()">Sign In</button>
+  </div>
+
+  <script>
+    const TEACHER_PASSWORD = "admin";
+
+    function handleLogin() {
+      const role = document.getElementById("user-role").value;
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!username) {
+        alert("Please enter a username or pupil code.");
+        return;
+      }
+
+      if (role === "teacher") {
+        if (password !== TEACHER_PASSWORD) {
+          alert("Incorrect password for teacher.");
+          return;
+        }
+        sessionStorage.setItem("userRole", "teacher");
+        sessionStorage.setItem("teacherUser", username);
+        window.location.href = "admin.html";
+      } else {
+        sessionStorage.setItem("userRole", "pupil");
+        sessionStorage.setItem("pupilUser", username);
+        sessionStorage.setItem("tempPass", password);
+        window.location.href = "pupil.html";
+      }
+    }
+  </script>
+
+</body>
+</html>

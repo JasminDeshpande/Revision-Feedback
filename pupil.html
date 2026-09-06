@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pupil Feedback Portal</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #1e293b;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 28px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      color: #0f172a;
+      font-weight: 700;
+    }
+
+    .pupil-info {
+      font-size: 0.95rem;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      color: #1e293b;
+      background-color: #ffffff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .scores-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .eval-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-eval {
+      padding: 12px;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: white;
+      transition: transform 0.1s, opacity 0.2s;
+      opacity: 0.8;
+    }
+
+    .btn-eval:hover {
+      opacity: 1;
+    }
+
+    .btn-eval.selected {
+      opacity: 1;
+      transform: scale(1.02);
+      border-color: #0f172a;
+    }
+
+    .btn-green { background-color: #4ade80; color: #14532d; }
+    .btn-amber { background-color: #fbbf24; color: #78350f; }
+    .btn-red { background-color: #f87171; color: #7f1d1d; }
+
+    .btn-submit {
+      background-color: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+    }
+
+    .btn-submit:hover {
+      background-color: #1d4ed8;
+    }
+
+    /* Activity Table */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    .roster-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    .roster-table th {
+      background-color: #f1f5f9;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 12px 16px;
+    }
+
+    .roster-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+      text-transform: uppercase;
+    }
+
+    .badge-green { background-color: #dcfce7; color: #15803d; }
+    .badge-amber { background-color: #fef3c7; color: #b45309; }
+    .badge-red { background-color: #fee2e2; color: #b91c1c; }
+
+    .band-bold {
+      font-weight: 700;
+    }
+
+    .band-1, .band-2, .band-3 { color: #16a34a; }
+    .band-4, .band-5, .band-6 { color: #d97706; }
+    .band-7, .band-8, .band-9 { color: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- Submit Task Feedback Card -->
+    <section class="card">
+      <div class="header-row">
+        <h2>Submit Task Feedback</h2>
+        <div class="pupil-info">Leisha | Class Code: <span id="class-code-display">HCS26</span></div>
+      </div>
+
+      <div class="form-grid">
+        <div class="left-col" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Topic / Task Dropdown -->
+          <div class="form-group">
+            <label for="topic-select">Select Topic / Task:</label>
+            <select id="topic-select">
+              <option value="">-- Choose Topic --</option>
+              <option value="Data Representation">Data Representation</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="revision-notes">Revision Notes or Questions (Optional):</label>
+            <textarea id="revision-notes" placeholder="Add any comments or areas you struggled with..."></textarea>
+          </div>
+
+          <div class="scores-row">
+            <div class="form-group" style="flex: 1;">
+              <label for="score">Score:</label>
+              <input type="number" id="score" placeholder="e.g. 15">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="total-marks">Total Marks:</label>
+              <input type="number" id="total-marks" placeholder="e.g. 20">
+            </div>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="form-group">
+            <label>Self Evaluation (How do you feel?):</label>
+            <div class="eval-buttons">
+              <button class="btn-eval btn-green" type="button" onclick="selectEval('GREEN', this)">Green</button>
+              <button class="btn-eval btn-amber" type="button" onclick="selectEval('AMBER', this)">Amber</button>
+              <button class="btn-eval btn-red" type="button" onclick="selectEval('RED', this)">Red</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-submit" type="button" onclick="submitFeedback()">Submit Entry</button>
+    </section>
+
+    <!-- Class Activities & Feedback Log -->
+    <section class="card">
+      <h2>Class Activities & Feedback Log</h2>
+      <div class="table-container">
+        <table class="roster-table" id="feedback-table">
+          <thead>
+            <tr>
+              <th>Topic</th>
+              <th>Revision Notes</th>
+              <th>Self Evaluation</th>
+              <th>Score</th>
+              <th>Total</th>
+              <th>%</th>
+              <th>Current Band</th>
+              <th>Target Band</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Data Representation</strong></td>
+              <td>I need to practise conversion</td>
+              <td><span class="badge badge-green">GREEN</span></td>
+              <td>18</td>
+              <td>20</td>
+              <td>90%</td>
+              <td><span class="band-bold band-1">Band 1</span></td>
+              <td>Band 1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    let selectedEval = '';
+
+    function selectEval(value, btn) {
+      selectedEval = value;
+      document.querySelectorAll('.btn-eval').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function calculateBand(percentage) {
+      if (percentage >= 85) return 1;
+      if (percentage >= 75) return 2;
+      if (percentage >= 65) return 3;
+      if (percentage >= 55) return 4;
+      if (percentage >= 45) return 5;
+      if (percentage >= 40) return 6;
+      if (percentage >= 30) return 7;
+      if (percentage >= 20) return 8;
+      return 9;
+    }
+
+    function submitFeedback() {
+      const topic = document.getElementById('topic-select').value;
+      const notes = document.getElementById('revision-notes').value.trim();
+      const scoreVal = parseFloat(document.getElementById('score').value);
+      const totalVal = parseFloat(document.getElementById('total-marks').value);
+
+      if (!topic) {
+        alert("Please select a topic.");
+        return;
+      }
+
+      if (isNaN(scoreVal) || isNaN(totalVal) || totalVal <= 0) {
+        alert("Please enter a valid score and total marks.");
+        return;
+      }
+
+      if (!selectedEval) {
+        alert("Please select a Self Evaluation rating (Green, Amber, or Red).");
+        return;
+      }
+
+      const percentage = Math.round((scoreVal / totalVal) * 100);
+      const band = calculateBand(percentage);
+
+      const tbody = document.querySelector('#feedback-table tbody');
+      const tr = document.createElement('tr');
+
+      let badgeClass = 'badge-green';
+      if (selectedEval === 'AMBER') badgeClass = 'badge-amber';
+      if (selectedEval === 'RED') badgeClass = 'badge-red';
+
+      tr.innerHTML = `
+        <td><strong>${topic}</strong></td>
+        <td>${notes || '-'}</td>
+        <td><span class="badge ${badgeClass}">${selectedEval}</span></td>
+        <td>${scoreVal}</td>
+        <td>${totalVal}</td>
+        <td>${percentage}%</td>
+        <td><span class="band-bold band-${band}">Band ${band}</span></td>
+        <td>Band 1</td>
+      `;
+
+      tbody.prepend(tr);
+
+      // Reset Form
+      document.getElementById('topic-select').value = '';
+      document.getElementById('revision-notes').value = '';
+      document.getElementById('score').value = '';
+      document.getElementById('total-marks').value = '';
+      selectedEval = '';
+      document.querySelectorAll('.btn-eval').forEach(b => b.classList.remove('selected'));
+
+      alert("Feedback submitted successfully!");
+    }
+  </script>
+</body>
+</html>
