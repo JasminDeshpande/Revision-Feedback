@@ -1,192 +1,30 @@
-// Supabase Configuration
-const SUPABASE_URL = 'https://teusfncayuljkoomerql.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_1WNxp6aaYVzrrNilg7pAAA_gG_XDx55';
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser,classes=[],topics=[],latestCredentials=[];
+const pageMessage=document.getElementById("page-message");
+const typeNames={timed_question:"Timed Question",progress_check:"Progress Check",prelim:"Prelim",homework:"Homework",assignment:"Assignment",general:"General Feedback"};
 
-// 1. Create a Class
-async function createClass() {
-  const className = document.getElementById('className').value.trim();
-  const joinCode = document.getElementById('joinCode').value.trim().toUpperCase();
+document.querySelectorAll(".sidebar button").forEach(button=>button.addEventListener("click",()=>{document.querySelectorAll(".sidebar button,.panel").forEach(x=>x.classList.remove("active"));button.classList.add("active");document.getElementById(button.dataset.panel).classList.add("active");}));
+function options(items,labelFn=x=>x.class_name){return `<option value="">-- Select --</option>`+items.map(x=>`<option value="${x.id}">${escapeHtml(labelFn(x))}</option>`).join("");}
+function fillClassSelects(){for(const id of["pupil-class","roster-class","task-class","feedback-class"]){const el=document.getElementById(id);const old=el.value;el.innerHTML=options(classes);if(classes.some(x=>x.id===old))el.value=old;}document.getElementById("task-topic").innerHTML=options(topics,x=>x.topic_name);}
 
-  if (!className || !joinCode) {
-    alert("Please enter both a Class Name and Join Code.");
-    return;
-  }
+async function loadClasses(){const{data,error}=await db.from("classes").select("*, academic_years(label)").order("class_name");if(error)throw error;classes=data||[];document.getElementById("classes-body").innerHTML=classes.map(c=>`<tr><td>${escapeHtml(c.class_name)}</td><td>${escapeHtml(c.join_code)}</td><td>${escapeHtml(c.academic_years?.label)}</td><td>${c.active?"Active":"Archived"}</td><td><button class="secondary" onclick="editClass('${c.id}')">Edit</button> <button class="danger" onclick="archiveClass('${c.id}')">Archive</button></td></tr>`).join("")||"<tr><td colspan='5'>No classes yet.</td></tr>";fillClassSelects();}
+async function editClass(id){const item=classes.find(c=>c.id===id);const className=prompt("Class name",item.class_name);if(className===null)return;const joinCode=prompt("Join code",item.join_code);if(joinCode===null)return;const{error}=await db.from("classes").update({class_name:className.trim(),join_code:joinCode.trim().toUpperCase()}).eq("id",id);if(error)return showMessage(pageMessage,error.message);await loadClasses();}
+async function archiveClass(id){if(!confirm("Archive this class? Its existing feedback will be retained."))return;const{error}=await db.from("classes").update({active:false}).eq("id",id);if(error)return showMessage(pageMessage,error.message);await loadClasses();}
+async function ensureDefaults(){let{data:topicData}=await db.from("topics").select("*").order("topic_name");if(!topicData?.length){const names=["Computer Systems","DDD","SDD"];await db.from("topics").insert(names.map(topic_name=>({teacher_id:currentUser.id,topic_name})));({data:topicData}=await db.from("topics").select("*").order("topic_name"));}topics=topicData||[];fillClassSelects();}
+document.getElementById("class-form").addEventListener("submit",async e=>{e.preventDefault();try{const label=document.getElementById("academic-year").value.trim();let{data:year}=await db.from("academic_years").select("id").eq("label",label).maybeSingle();if(!year){const result=await db.from("academic_years").insert({label,created_by:currentUser.id}).select("id").single();if(result.error)throw result.error;year=result.data;}const{error}=await db.from("classes").insert({teacher_id:currentUser.id,academic_year_id:year.id,class_name:document.getElementById("class-name").value.trim(),join_code:document.getElementById("join-code").value.trim().toUpperCase()});if(error)throw error;e.target.reset();document.getElementById("academic-year").value="2026-27";showMessage(pageMessage,"Class added.","success");await loadClasses();}catch(error){showMessage(pageMessage,error.message);}});
 
-  const { error } = await supabaseClient
-    .from('classes')
-    .insert([{ class_name: className, join_code: joinCode }]);
+document.getElementById("add-pupils").addEventListener("click",async()=>{const message=document.getElementById("pupil-message");try{const classId=document.getElementById("pupil-class").value;const rows=document.getElementById("pupil-data").value.split(/\r?\n/).filter(Boolean).map(line=>{const[name,code,band]=line.split(",").map(x=>x.trim());return{name,code,targetBand:Number(band)};});if(!classId||!rows.length)throw new Error("Select a class and enter pupil details.");const{data,error}=await db.functions.invoke("create-pupils",{body:{classId,pupils:rows}});if(error)throw error;if(data?.error)throw new Error(data.error);latestCredentials=data.credentials;document.getElementById("credentials-body").innerHTML=latestCredentials.map(x=>`<tr><td>${escapeHtml(x.name)}</td><td>${escapeHtml(x.code)}</td><td>${escapeHtml(x.temporaryPassword)}</td></tr>`).join("");document.getElementById("credentials").classList.remove("hidden");document.getElementById("pupil-data").value="";showMessage(message,`${latestCredentials.length} pupil accounts created.`,"success");await loadRoster();}catch(error){showMessage(message,error.message);}});
+document.getElementById("download-credentials").addEventListener("click",()=>{const csv=["Name,Pupil Code,Temporary Password",...latestCredentials.map(x=>[x.name,x.code,x.temporaryPassword].map(v=>`"${String(v).replaceAll('"','""')}"`).join(","))].join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="temporary-pupil-logins.csv";a.click();URL.revokeObjectURL(a.href);});
+async function loadRoster(){const classId=document.getElementById("roster-class").value||document.getElementById("pupil-class").value;if(!classId){document.getElementById("roster-body").innerHTML="<tr><td colspan='5'>Select a class.</td></tr>";return;}const{data}=await db.from("pupils").select("*").eq("class_id",classId).order("pupil_name");document.getElementById("roster-body").innerHTML=(data||[]).map(p=>`<tr><td>${escapeHtml(p.pupil_name)}</td><td>${escapeHtml(p.pupil_code)}</td><td>${p.target_band}</td><td>${p.active?"Active":"Archived"}</td><td><button class="secondary" onclick='editPupil(${JSON.stringify(JSON.stringify(p))})'>Edit</button> <button class="secondary" onclick="resetPupilPassword('${p.id}')">Reset password</button> <button class="danger" onclick="archivePupil('${p.id}')">Archive</button></td></tr>`).join("")||"<tr><td colspan='5'>No pupils.</td></tr>";}
+async function managePupil(body){const{data,error}=await db.functions.invoke("manage-pupil",{body});if(error)throw error;if(data?.error)throw new Error(data.error);}
+async function editPupil(serialised){const p=JSON.parse(serialised),name=prompt("Pupil name",p.pupil_name);if(name===null)return;const code=prompt("Pupil code",p.pupil_code);if(code===null)return;const targetBand=prompt("Target band (1-9)",p.target_band);if(targetBand===null)return;try{await managePupil({action:"update",pupilId:p.id,name,code,targetBand:Number(targetBand)});await loadRoster();}catch(error){showMessage(pageMessage,error.message);}}
+async function resetPupilPassword(pupilId){const temporaryPassword=prompt("Enter a new temporary password (at least 8 characters)");if(temporaryPassword===null)return;try{await managePupil({action:"reset_password",pupilId,temporaryPassword});alert("Temporary password set. The pupil must replace it at next login.");}catch(error){showMessage(pageMessage,error.message);}}
+async function archivePupil(pupilId){if(!confirm("Archive this pupil? Their feedback will be retained."))return;try{await managePupil({action:"archive",pupilId});await loadRoster();}catch(error){showMessage(pageMessage,error.message);}}
+document.getElementById("roster-class").addEventListener("change",loadRoster);
+document.getElementById("is-scored").addEventListener("change",e=>{document.getElementById("total-marks").disabled=!e.target.checked;if(!e.target.checked)document.getElementById("total-marks").value="";});
+document.getElementById("task-form").addEventListener("submit",async e=>{e.preventDefault();try{const scored=document.getElementById("is-scored").checked;const{error}=await db.from("assessments").insert({class_id:document.getElementById("task-class").value,topic_id:document.getElementById("task-topic").value,assessment_type:document.getElementById("task-type").value,title:document.getElementById("task-title").value.trim(),is_scored:scored,total_marks:scored?Number(document.getElementById("total-marks").value):null,due_date:document.getElementById("task-date").value||null});if(error)throw error;e.target.reset();document.getElementById("is-scored").checked=true;showMessage(pageMessage,"Task created.","success");await loadTasks();}catch(error){showMessage(pageMessage,error.message);}});
+async function loadTasks(){const{data}=await db.from("assessments").select("*,classes(class_name),topics(topic_name)").order("created_at",{ascending:false});document.getElementById("tasks-body").innerHTML=(data||[]).map(a=>`<tr><td>${escapeHtml(a.classes?.class_name)}</td><td>${escapeHtml(a.title)}</td><td>${escapeHtml(a.topics?.topic_name)}</td><td>${typeNames[a.assessment_type]}</td><td>${a.is_scored?a.total_marks:"Not scored"}</td><td>${a.active?`<button class="danger" onclick="archiveTask('${a.id}')">Archive</button>`:"Archived"}</td></tr>`).join("")||"<tr><td colspan='6'>No tasks.</td></tr>";}
+async function archiveTask(id){if(!confirm("Archive this task? Existing submissions will remain visible."))return;const{error}=await db.from("assessments").update({active:false}).eq("id",id);if(error)return showMessage(pageMessage,error.message);await loadTasks();}
+async function loadFeedback(){const classId=document.getElementById("feedback-class").value;if(!classId){document.getElementById("feedback-body").innerHTML="<tr><td colspan='8'>Select a class.</td></tr>";return;}const{data}=await db.from("feedback").select("*,pupils!inner(pupil_name,class_id),assessments!inner(title,class_id,topics(topic_name))").eq("pupils.class_id",classId).eq("assessments.class_id",classId).order("submitted_at",{ascending:false});document.getElementById("feedback-body").innerHTML=(data||[]).map(f=>`<tr><td>${escapeHtml(f.pupils?.pupil_name)}</td><td>${escapeHtml(f.assessments?.title)}</td><td>${escapeHtml(f.assessments?.topics?.topic_name)}</td><td>${f.score??"–"}</td><td>${f.percentage==null?"–":`${f.percentage}%`}</td><td>${f.current_band??"–"}</td><td><span class="badge ${f.self_evaluation}">${f.self_evaluation}</span></td><td>${escapeHtml(f.revision_comment)}</td></tr>`).join("")||"<tr><td colspan='8'>No feedback yet.</td></tr>";}
+document.getElementById("feedback-class").addEventListener("change",loadFeedback);
 
-  if (error) {
-    alert("Error creating class: " + error.message);
-  } else {
-    alert(`Class "${className}" (${joinCode}) created successfully!`);
-    document.getElementById('className').value = '';
-    document.getElementById('joinCode').value = '';
-  }
-}
-
-// 2. Bulk Add Pupils (Name, Code format)
-async function bulkAddPupils() {
-  const code = document.getElementById('bulkClassCode').value.trim().toUpperCase();
-  const rawInput = document.getElementById('bulkPupilData').value.trim();
-
-  if (!code || !rawInput) {
-    alert("Please enter a class code and paste pupil entries.");
-    return;
-  }
-
-  const lines = rawInput.split('\n').filter(l => l.trim().length > 0);
-  const pupilRecords = [];
-
-  for (let line of lines) {
-    const parts = line.split(',');
-    if (parts.length < 2) {
-      alert(`Format error on line: "${line}". Must be "Name, PupilCode".`);
-      return;
-    }
-    pupilRecords.push({
-      class_id: code,
-      pupil_name: parts[0].trim(),
-      pupil_code: parts[1].trim().toUpperCase()
-    });
-  }
-
-  const { error } = await supabaseClient.from('pupils').insert(pupilRecords);
-
-  if (error) {
-    alert("Error adding pupils: " + error.message);
-  } else {
-    alert(`Successfully added ${pupilRecords.length} pupils to class ${code}!`);
-    document.getElementById('bulkPupilData').value = '';
-  }
-}
-
-// 3. Manage Pupils (Load Roster)
-async function loadPupils() {
-  const code = document.getElementById('manageClassCode').value.trim().toUpperCase();
-  const roster = document.getElementById('pupilRoster');
-
-  if (!code) {
-    alert("Please enter a class code.");
-    return;
-  }
-
-  const { data, error } = await supabaseClient
-    .from('pupils')
-    .select('*')
-    .eq('class_id', code);
-
-  if (error || !data || data.length === 0) {
-    roster.innerHTML = "<p>No pupils found for code: " + code + "</p>";
-    return;
-  }
-
-  roster.innerHTML = data.map(p => `
-    <div class="pupil-item">
-      <div>
-        <strong>${p.pupil_name}</strong> (Code: <code>${p.pupil_code}</code>)
-        <br><small>Password set: ${p.password ? 'Yes' : 'No (First Login Pending)'}</small>
-      </div>
-      <div>
-        <button class="btn-warning" onclick="resetPassword('${p.pupil_code}')">Reset Password</button>
-        <button class="btn-danger" onclick="deletePupil('${p.pupil_code}')">Delete</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-// 3a. Reset Pupil Password
-async function resetPassword(pupilCode) {
-  const { error } = await supabaseClient
-    .from('pupils')
-    .update({ password: null })
-    .eq('pupil_code', pupilCode);
-
-  if (error) {
-    alert("Error resetting password: " + error.message);
-  } else {
-    alert(`Password reset for ${pupilCode}. Student can set a new password on their next login.`);
-    loadPupils();
-  }
-}
-
-// 3b. Delete Pupil Entry
-async function deletePupil(pupilCode) {
-  if (!confirm(`Are you sure you want to delete pupil ${pupilCode}?`)) return;
-
-  const { error } = await supabaseClient
-    .from('pupils')
-    .delete()
-    .eq('pupil_code', pupilCode);
-
-  if (error) {
-    alert("Error deleting pupil: " + error.message);
-  } else {
-    alert(`Pupil ${pupilCode} removed successfully.`);
-    loadPupils();
-  }
-}
-
-// 4. Post New Task Entry for Pupils
-async function createFeedbackTask() {
-  const code = document.getElementById('taskClassCode').value.trim().toUpperCase();
-  const topic = document.getElementById('taskTopic').value;
-  const title = document.getElementById('taskTitle').value.trim();
-
-  if (!code || !title) {
-    alert("Please enter both a class code and task title.");
-    return;
-  }
-
-  const { error } = await supabaseClient.from('feedback').insert([{
-    class_id: code,
-    pupil_id: `[TASK] ${topic}`,
-    notes: title,
-    status_color: 'amber'
-  }]);
-
-  if (error) {
-    alert("Error posting task: " + error.message);
-  } else {
-    alert(`Posted new task "${topic}: ${title}" to class ${code}!`);
-    document.getElementById('taskTitle').value = '';
-    loadFeedback();
-  }
-}
-
-// 5. Load Live Feedback Stream
-async function loadFeedback() {
-  const code = document.getElementById('viewCode').value.trim().toUpperCase();
-  const list = document.getElementById('feedbackList');
-
-  if (!code) {
-    alert("Please enter a class code.");
-    return;
-  }
-
-  const { data, error } = await supabaseClient
-    .from('feedback')
-    .select('*')
-    .eq('class_id', code)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    list.innerHTML = "<p>Error loading feedback: " + error.message + "</p>";
-    return;
-  }
-
-  if (!data || data.length === 0) {
-    list.innerHTML = "<p>No feedback entries found for code: " + code + "</p>";
-    return;
-  }
-
-  list.innerHTML = data.map(f => `
-    <div class="feedback-item">
-      <div>
-        <span class="badge ${f.status_color}">${(f.status_color || '').toUpperCase()}</span>
-        <strong>${f.pupil_id}</strong>: ${f.notes || 'No notes added'}
-      </div>
-    </div>
-  `).join('');
-}
+(async()=>{const{data:{user}}=await db.auth.getUser();if(!user)return window.location.replace("index.html");const{data:profile}=await db.from("profiles").select("role").eq("id",user.id).single();if(profile?.role!=="teacher")return signOut();currentUser=user;try{await loadClasses();await ensureDefaults();await loadTasks();}catch(error){showMessage(pageMessage,error.message);}})();
