@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Teacher Dashboard</title>
-<link rel="stylesheet" href="styles.css?v=20260915-5">
+<link rel="stylesheet" href="styles.css?v=20260915-6">
 </head>
 <body>
 <header class="app-header">
@@ -68,15 +68,17 @@
 <section id="pupils" class="panel">
 <h2>Pupils</h2>
 <div class="card">
-<h3>Add a pupil</h3>
+<h3>Bulk add pupils</h3>
 <div class="grid three">
 <div>
-<label for="pupil-name">Pupil name</label>
-<input id="pupil-name" required placeholder="e.g. Test Pupil 01">
+<label for="pupil-name">Pupil names</label>
+<textarea id="pupil-name" required placeholder="One name per line&#10;e.g. Leisha&#10;Liana"></textarea>
+<p class="field-help">Enter one pupil name per line.</p>
 </div>
 <div>
-<label for="pupil-code">Pupil login code</label>
-<input id="pupil-code" required placeholder="e.g. TESTP01">
+<label for="pupil-code">Pupil login codes</label>
+<textarea id="pupil-code" required placeholder="One login code per line&#10;e.g. LEISHA01&#10;LIANA02"></textarea>
+<p class="field-help">Keep these in the same order as the pupil names.</p>
 </div>
 <div>
 <label for="pupil-class">Class / join code</label>
@@ -86,9 +88,8 @@
 <div>
 <label for="pupil-band">Target band</label>
 <select id="pupil-band" required>
-<option value="">-- Select band --</option>
 <option value="1">Band 1</option>
-<option value="2">Band 2</option>
+<option value="2" selected>Band 2</option>
 <option value="3">Band 3</option>
 <option value="4">Band 4</option>
 <option value="5">Band 5</option>
@@ -100,7 +101,7 @@
 </div>
 </div>
 <div class="actions">
-<button id="add-pupils" class="primary">Create pupil account</button>
+<button id="add-pupils" class="primary">Create pupil accounts</button>
 </div>
 <p id="pupil-message" class="message">
 </p>
@@ -272,7 +273,7 @@
 </script>
 <script src="config.js">
 </script>
-<script src="admin-v5.js">
+<script src="admin-v6.js">
 </script>
 </body>
 </html>
