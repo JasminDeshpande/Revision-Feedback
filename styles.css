@@ -7,6 +7,7 @@ label{display:block;font-size:.88rem;font-weight:700;margin:.85rem 0 .35rem}
 input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:7px;padding:.7rem .8rem;background:#fff}
 textarea{min-height:95px;resize:vertical}
 .field-help{margin:.35rem 0 0;color:var(--muted);font-size:.82rem}
+.roster-band{width:auto;min-width:88px;padding:.45rem .55rem}
 button{border:0;border-radius:7px;padding:.68rem 1rem;cursor:pointer;font-weight:700}
 button.primary{background:var(--blue);color:#fff}
 button.secondary{background:#e2e8f0;color:var(--navy)}
