@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Teacher Dashboard</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=20260915-5">
 </head>
 <body>
 <header class="app-header">
@@ -228,9 +228,24 @@
 <section id="feedback" class="panel">
 <h2>Feedback log</h2>
 <div class="card">
-<label>Filter by class</label>
-<select id="feedback-class">
-</select>
+<div class="grid four feedback-filters">
+<div>
+<label for="feedback-class">Class (required)</label>
+<select id="feedback-class"></select>
+</div>
+<div>
+<label for="feedback-pupil">Pupil</label>
+<select id="feedback-pupil" disabled><option value="">All pupils</option></select>
+</div>
+<div>
+<label for="feedback-topic">Topic</label>
+<select id="feedback-topic" disabled><option value="">All topics</option></select>
+</div>
+<div>
+<label for="feedback-task">Task</label>
+<select id="feedback-task" disabled><option value="">All tasks</option></select>
+</div>
+</div>
 <div class="table-wrap">
 <table>
 <thead>
@@ -257,7 +272,7 @@
 </script>
 <script src="config.js">
 </script>
-<script src="admin-v4.js">
+<script src="admin-v5.js">
 </script>
 </body>
 </html>
