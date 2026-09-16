@@ -34,6 +34,7 @@ button.danger{background:#fee2e2;color:#991b1b}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
 .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
 .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+.grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}
 .feedback-filters{margin-bottom:1rem}
 .actions{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
 .table-wrap{overflow:auto}
@@ -94,13 +95,18 @@ tbody tr:hover{background:#f8fafc}
 .action-points-table th:not(:nth-child(4)),.action-points-table td:not(:nth-child(4)){width:1%;white-space:nowrap}
 .action-points-table th:nth-child(4),.action-points-table td:nth-child(4){width:100%;min-width:360px;white-space:normal}
 .action-points-table td:last-child button{padding:.45rem .7rem}
+.priority-group td{background:#dbeafe;color:#1e3a8a;font-weight:800;border-top:2px solid #93c5fd}
+.teacher-action-points-table th:not(:nth-child(5)),.teacher-action-points-table td:not(:nth-child(5)){width:1%;white-space:nowrap}
+.teacher-action-points-table th:nth-child(5),.teacher-action-points-table td:nth-child(5){width:100%;min-width:320px;white-space:normal}
+#feedback-body td:nth-child(6){white-space:nowrap}
 @media(max-width:900px){.dashboard-grid{grid-template-columns:1fr 1fr}.progress-card{grid-column:1/-1}}
 @media(max-width:1000px){.notes-layout{grid-template-columns:1fr}}
+@media(max-width:1200px){.grid.five{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:1050px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:800px){.app-shell{grid-template-columns:1fr}
 .sidebar{display:flex;overflow:auto}
 .sidebar button{min-width:max-content}
-.grid,.grid.three,.grid.four,.chart-grid{grid-template-columns:1fr}
+.grid,.grid.three,.grid.four,.grid.five,.chart-grid{grid-template-columns:1fr}
 .content{padding:1rem}
 }
 @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.progress-card{grid-column:auto}}

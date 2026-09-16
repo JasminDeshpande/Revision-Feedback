@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Teacher Dashboard</title>
-<link rel="stylesheet" href="styles.css?v=20260915-8">
+<link rel="stylesheet" href="styles.css?v=20260916-14">
 </head>
 <body>
 <header class="app-header">
@@ -20,6 +20,7 @@
 <button data-panel="pupils">Pupils</button>
 <button data-panel="tasks">Tasks</button>
 <button data-panel="feedback">Feedback</button>
+<button data-panel="action-points">Pupil action points</button>
 </nav>
 <main class="content">
 <p id="page-message" class="message">
@@ -173,9 +174,6 @@
 <option value="timed_question">Timed Question</option>
 <option value="progress_check">Progress Check</option>
 <option value="prelim">Prelim</option>
-<option value="homework">Homework</option>
-<option value="assignment">Assignment</option>
-<option value="general">General Feedback</option>
 </select>
 </div>
 <div>
@@ -204,7 +202,6 @@
 <div><label for="new-topic">New topic</label><input id="new-topic" placeholder="e.g. Computer Systems"></div>
 <div class="actions"><button id="add-topic" class="primary" type="button">Add topic</button></div>
 </div>
-<div class="table-wrap"><table><thead><tr><th>Topic</th><th>Action</th></tr></thead><tbody id="topics-body"></tbody></table></div>
 </div>
 <div class="card">
 <h3>Active tasks</h3>
@@ -227,9 +224,9 @@
 </div>
 </section>
 <section id="feedback" class="panel">
-<h2>Feedback log</h2>
+<div class="section-heading"><h2>Feedback log</h2><button id="download-feedback-log" class="secondary" type="button" disabled>Download feedback PDF</button></div>
 <div class="card">
-<div class="grid four feedback-filters">
+<div class="grid five feedback-filters">
 <div>
 <label for="feedback-class">Class (required)</label>
 <select id="feedback-class"></select>
@@ -245,6 +242,10 @@
 <div>
 <label for="feedback-task">Task</label>
 <select id="feedback-task" disabled><option value="">All tasks</option></select>
+</div>
+<div>
+<label for="feedback-priority">Revision priority</label>
+<select id="feedback-priority" disabled><option value="normal">Newest feedback first</option><option value="task_average">Lowest task average first</option><option value="pupil_average">Lowest pupil average first</option></select>
 </div>
 </div>
 <div class="table-wrap">
@@ -267,13 +268,43 @@
 </div>
 </div>
 </section>
+<section id="action-points" class="panel">
+<div class="section-heading"><h2>Pupil action points</h2><span id="teacher-action-count" class="badge amber">0 to action</span></div>
+<div class="card">
+<h3>Set up action-point topics and tasks</h3>
+<div class="grid">
+<div><label for="action-new-topic">New shared topic</label><input id="action-new-topic" placeholder="e.g. Database Design"></div>
+<div class="actions"><button id="add-action-topic" class="primary" type="button">Add topic</button></div>
+</div>
+<form id="action-task-form" class="grid three">
+<div><label for="action-task-class">Class</label><select id="action-task-class" required></select></div>
+<div><label for="action-task-topic">Topic</label><select id="action-task-topic" required></select></div>
+<div><label for="action-task-title">Action-point task</label><input id="action-task-title" required placeholder="e.g. Query design reminders"></div>
+<div class="actions"><button id="action-task-submit" class="primary" type="submit">Add action-point task</button><button id="cancel-action-task-edit" class="secondary hidden" type="button">Cancel edit</button></div>
+</form>
+<div class="table-wrap"><table><thead><tr><th>Class</th><th>Topic</th><th>Action-point task</th><th>Action</th></tr></thead><tbody id="action-tasks-body"></tbody></table></div>
+</div>
+<div class="card">
+<div class="grid three feedback-filters">
+<div><label for="action-class">Class (required)</label><select id="action-class"></select></div>
+<div><label for="action-pupil">Pupil</label><select id="action-pupil" disabled><option value="">All pupils</option></select></div>
+<div><label for="action-type">Entry type</label><select id="action-type" disabled><option value="">All entry types</option><option value="general_feedback">General feedback</option><option value="class_note">Class note</option><option value="revision_tip">Revision tip</option><option value="assignment_feedback">Assignment feedback</option></select></div>
+<div><label for="action-status">Status</label><select id="action-status" disabled><option value="">All statuses</option><option value="open">To action</option><option value="actioned">Actioned</option></select></div>
+<div><label for="action-topic">Topic</label><select id="action-topic" disabled><option value="">All topics</option></select></div>
+<div><label for="action-task">Task</label><select id="action-task" disabled><option value="">All tasks</option></select></div>
+</div>
+<div class="table-wrap"><table class="teacher-action-points-table"><thead><tr><th>Pupil</th><th>Type</th><th>Task</th><th>Topic</th><th>Revision comment / action point</th><th>Status</th><th>Date</th></tr></thead><tbody id="teacher-actions-body"><tr><td colspan="7">Select a class.</td></tr></tbody></table></div>
+</div>
+</section>
 </main>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
 </script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="config.js">
 </script>
-<script src="admin-v8.js">
+<script src="admin-v10.js">
 </script>
 </body>
 </html>

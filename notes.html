@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Revision Notes and Action Points</title>
-<link rel="stylesheet" href="styles.css?v=20260916-12">
+<link rel="stylesheet" href="styles.css?v=20260916-14">
 </head>
 <body>
 <header class="app-header">
@@ -24,10 +24,10 @@
 <option value="revision_tip">Revision tip</option>
 <option value="assignment_feedback">Assignment feedback</option>
 </select>
-<label for="note-task">Task (optional)</label>
-<select id="note-task"><option value="">-- No specific task --</option></select>
-<label for="note-topic">Topic (optional)</label>
-<select id="note-topic"><option value="">-- No specific topic --</option></select>
+<label for="note-task">Action-point task</label>
+<select id="note-task" required><option value="">-- Select task --</option></select>
+<label for="note-topic">Topic</label>
+<select id="note-topic" required><option value="">-- Select topic --</option></select>
 <label for="note-comment">Revision comment / action point</label>
 <textarea id="note-comment" required placeholder="What do you need to revise, practise or be careful about next time?"></textarea>
 <label class="checkbox-line"><input id="note-actioned" type="checkbox"> This action point has been completed</label>
@@ -45,6 +45,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="config.js"></script>
-<script src="notes.js"></script>
+<script src="notes.js?v=20260916-2"></script>
 </body>
 </html>
