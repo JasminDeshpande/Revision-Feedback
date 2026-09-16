@@ -75,6 +75,10 @@ tbody tr:hover{background:#f8fafc}
 .button-link{display:inline-block;border-radius:7px;padding:.68rem 1rem;text-decoration:none;font-weight:700;text-align:center}
 .button-link.secondary{background:#e2e8f0;color:var(--navy)}
 .pupil-summary .button-link{width:100%;margin-top:.5rem}
+.button-link.action-points-button{background:#0f766e;color:#fff;box-shadow:0 4px 0 #115e59}
+.button-link.back-dashboard-button{background:#7c3aed;color:#fff;box-shadow:0 4px 0 #5b21b6}
+.button-link.action-points-button:hover,.button-link.back-dashboard-button:hover{filter:brightness(1.08)}
+.button-link.action-points-button:active,.button-link.back-dashboard-button:active{transform:translateY(3px);box-shadow:0 1px 0 #334155}
 .summary-item .badge{display:inline-block;white-space:nowrap;width:auto}
 .feedback-history-table .band-column,.feedback-history-table td:nth-child(6){white-space:nowrap;min-width:84px}
 .feedback-history-table .comment-column,.feedback-history-table td:nth-child(8){min-width:340px;width:36%}
@@ -87,6 +91,9 @@ tbody tr:hover{background:#f8fafc}
 .checkbox-line input,.action-checkbox{width:auto}
 .actioned-row td{color:var(--muted);background:#f8fafc}
 .actioned-row .note-comment{text-decoration:line-through}
+.action-points-table th:not(:nth-child(4)),.action-points-table td:not(:nth-child(4)){width:1%;white-space:nowrap}
+.action-points-table th:nth-child(4),.action-points-table td:nth-child(4){width:100%;min-width:360px;white-space:normal}
+.action-points-table td:last-child button{padding:.45rem .7rem}
 @media(max-width:900px){.dashboard-grid{grid-template-columns:1fr 1fr}.progress-card{grid-column:1/-1}}
 @media(max-width:1000px){.notes-layout{grid-template-columns:1fr}}
 @media(max-width:1050px){.grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}}

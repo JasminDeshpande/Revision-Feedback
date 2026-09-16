@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Revision Notes and Action Points</title>
-<link rel="stylesheet" href="styles.css?v=20260916-9">
+<link rel="stylesheet" href="styles.css?v=20260916-12">
 </head>
 <body>
 <header class="app-header">
 <div><p class="eyebrow">Pupil portal</p><h1>Revision notes &amp; action points</h1></div>
-<div class="actions"><a class="button-link secondary" href="pupil.html">Back to dashboard</a><button onclick="signOut()">Log out</button></div>
+<div class="actions"><a class="button-link back-dashboard-button" href="pupil.html">Back to dashboard</a><button onclick="signOut()">Log out</button></div>
 </header>
 <main class="content" style="margin:auto">
 <p class="muted">Keep track of feedback, class notes and the points you need to practise before your next assessment.</p>
@@ -37,7 +37,7 @@
 </section>
 <section class="card">
 <div class="section-heading"><h2>My notes and action points</h2><div class="actions"><span id="open-count" class="badge amber">0 to action</span><button id="download-notes-pdf" class="secondary" type="button" disabled>Download PDF</button></div></div>
-<div class="table-wrap"><table><thead><tr><th>Type</th><th>Task</th><th>Topic</th><th>Revision comment</th><th>Actioned</th><th>Actions</th></tr></thead><tbody id="notes-body"></tbody></table></div>
+<div class="table-wrap"><table class="action-points-table"><thead><tr><th>Type</th><th>Task</th><th>Topic</th><th>Revision comment</th><th>Actioned</th><th>Action</th></tr></thead><tbody id="notes-body"></tbody></table></div>
 </section>
 </div>
 </main>
