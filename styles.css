@@ -77,11 +77,12 @@ tbody tr:hover{background:#f8fafc}
 .pupil-summary .button-link{width:100%;margin-top:.5rem}
 .summary-item .badge{display:inline-block;white-space:nowrap;width:auto}
 .feedback-history-table .band-column,.feedback-history-table td:nth-child(6){white-space:nowrap;min-width:84px}
-.feedback-history-table .comment-column,.feedback-history-table td:nth-child(8){min-width:260px}
-.feedback-history-table td:last-child{white-space:nowrap}
+.feedback-history-table .comment-column,.feedback-history-table td:nth-child(8){min-width:340px;width:36%}
+.feedback-history-table th:last-child,.feedback-history-table td:last-child{width:1%;white-space:nowrap}
+.feedback-history-table td:last-child button{padding:.45rem .7rem}
 .inline-editor{border:1px solid var(--line);background:#f8fafc;border-radius:8px;padding:1rem;margin:.75rem 0 1rem}
 .inline-editor textarea{min-height:80px}
-.notes-layout{display:grid;grid-template-columns:minmax(300px,.75fr) minmax(550px,1.5fr);gap:1rem;align-items:start}
+.notes-layout{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:1rem;align-items:start}
 .checkbox-line{display:flex;align-items:center;gap:.55rem;margin-top:1rem;font-weight:700}
 .checkbox-line input,.action-checkbox{width:auto}
 .actioned-row td{color:var(--muted);background:#f8fafc}
