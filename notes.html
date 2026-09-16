@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Revision Notes and Action Points</title>
+<link rel="stylesheet" href="styles.css?v=20260916-9">
+</head>
+<body>
+<header class="app-header">
+<div><p class="eyebrow">Pupil portal</p><h1>Revision notes &amp; action points</h1></div>
+<div class="actions"><a class="button-link secondary" href="pupil.html">Back to dashboard</a><button onclick="signOut()">Log out</button></div>
+</header>
+<main class="content" style="margin:auto">
+<p class="muted">Keep track of feedback, class notes and the points you need to practise before your next assessment.</p>
+<div class="notes-layout">
+<section class="card">
+<h2 id="note-form-title">Add an action point</h2>
+<form id="note-form">
+<label for="note-type">Entry type</label>
+<select id="note-type" required>
+<option value="general_feedback">General feedback</option>
+<option value="class_note">Class note</option>
+<option value="revision_tip">Revision tip</option>
+<option value="assignment_feedback">Assignment feedback</option>
+</select>
+<label for="note-task">Task (optional)</label>
+<select id="note-task"><option value="">-- No specific task --</option></select>
+<label for="note-topic">Topic (optional)</label>
+<select id="note-topic"><option value="">-- No specific topic --</option></select>
+<label for="note-comment">Revision comment / action point</label>
+<textarea id="note-comment" required placeholder="What do you need to revise, practise or be careful about next time?"></textarea>
+<label class="checkbox-line"><input id="note-actioned" type="checkbox"> This action point has been completed</label>
+<div class="actions"><button id="note-submit" class="primary" type="submit">Save action point</button><button id="cancel-note-edit" class="secondary hidden" type="button">Cancel edit</button></div>
+</form>
+<p id="note-message" class="message"></p>
+</section>
+<section class="card">
+<div class="section-heading"><h2>My notes and action points</h2><div class="actions"><span id="open-count" class="badge amber">0 to action</span><button id="download-notes-pdf" class="secondary" type="button" disabled>Download PDF</button></div></div>
+<div class="table-wrap"><table><thead><tr><th>Type</th><th>Task</th><th>Topic</th><th>Revision comment</th><th>Actioned</th><th>Actions</th></tr></thead><tbody id="notes-body"></tbody></table></div>
+</section>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
+<script src="config.js"></script>
+<script src="notes.js"></script>
+</body>
+</html>
