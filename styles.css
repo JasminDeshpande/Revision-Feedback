@@ -116,3 +116,6 @@ tbody tr:hover{background:#f8fafc}
 .teacher-page .card>h3{padding-bottom:.8rem;margin-bottom:1.25rem;border-bottom:2px solid #111827;color:#10213d}
 .teacher-page .card input,.teacher-page .card select,.teacher-page .card textarea,.teacher-page .card table{background:#fff}
 .teacher-page .panel>h2,.teacher-page .section-heading{margin-bottom:1rem}
+.notes-page .card{background:#fff;border:2px solid #111827;box-shadow:0 8px 18px rgba(15,23,42,.18)}
+.notes-page .card>h2{padding-bottom:.8rem;margin-bottom:1.25rem;border-bottom:2px solid #111827;color:#10213d}
+.notes-page .card>.section-heading{padding-bottom:.8rem;margin-bottom:1.25rem;border-bottom:2px solid #111827}

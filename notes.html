@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Revision Notes and Action Points</title>
-<link rel="stylesheet" href="styles.css?v=20260917-1">
+<link rel="stylesheet" href="styles.css?v=20260917-8">
 </head>
-<body>
+<body class="notes-page">
 <header class="app-header">
 <div><p class="eyebrow">Pupil portal</p><h1>Revision notes &amp; action points</h1></div>
 <div class="actions"><a class="button-link back-dashboard-button" href="pupil.html">Back to dashboard</a><button onclick="signOut()">Log out</button></div>
@@ -19,10 +19,10 @@
 <form id="note-form">
 <label for="note-type">Entry type</label>
 <select id="note-type" required>
-<option value="general_feedback">General feedback</option>
+<option value="general_feedback">Homework</option>
 <option value="class_note">Class note</option>
 <option value="revision_tip">Revision tip</option>
-<option value="assignment_feedback">Assignment feedback</option>
+<option value="assignment_feedback">Assignment</option>
 </select>
 <label for="note-task">Action-point task</label>
 <select id="note-task" required><option value="">-- Select task --</option></select>
@@ -45,6 +45,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="config.js"></script>
-<script src="notes.js?v=20260917-1"></script>
+<script src="notes.js?v=20260917-3"></script>
 </body>
 </html>

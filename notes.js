@@ -1,5 +1,5 @@
 let user,pupil,tasks=[],topics=[],notes=[],editingNoteId=null;
-const noteTypes={general_feedback:"General feedback",class_note:"Class note",revision_tip:"Revision tip",assignment_feedback:"Assignment feedback"};
+const noteTypes={general_feedback:"Homework",class_note:"Class note",revision_tip:"Revision tip",assignment_feedback:"Assignment"};
 const noteMessage=document.getElementById("note-message");
 
 function selectOptions(items,labelFn){return items.map(item=>`<option value="${item.id}">${escapeHtml(labelFn(item))}</option>`).join("");}
