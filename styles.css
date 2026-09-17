@@ -112,7 +112,7 @@ tbody tr:hover{background:#f8fafc}
 @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.progress-card{grid-column:auto}}
 @media(max-width:800px){.pupil-action-grid{grid-template-columns:1fr}.feedback-card,.pupil-summary{grid-column:auto;grid-row:auto}.pupil-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}.pupil-summary h2{grid-column:1/-1;margin-bottom:0}.summary-item,.summary-item:first-of-type{border-top:0;padding:.25rem 0}}
 .task-list-filter{max-width:360px;margin:0 0 18px}.fixed-topics{margin:0 0 20px;color:#334155}
-.teacher-page .card{background:#eadbc8;border:2px solid #c4a27d;box-shadow:0 5px 14px rgba(74,48,25,.13);margin-bottom:1.75rem}
-.teacher-page .card>h3{padding-bottom:.8rem;margin-bottom:1.25rem;border-bottom:2px solid #b99068;color:#10213d}
+.teacher-page .card{background:#fffced;border:2px solid #eee3aa;box-shadow:0 5px 14px rgba(105,85,14,.07);margin-bottom:1.75rem}
+.teacher-page .card>h3{padding-bottom:.8rem;margin-bottom:1.25rem;border-bottom:2px solid #e3d48d;color:#10213d}
 .teacher-page .card input,.teacher-page .card select,.teacher-page .card textarea,.teacher-page .card table{background:#fff}
 .teacher-page .panel>h2,.teacher-page .section-heading{margin-bottom:1rem}
