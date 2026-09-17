@@ -111,3 +111,4 @@ tbody tr:hover{background:#f8fafc}
 }
 @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.progress-card{grid-column:auto}}
 @media(max-width:800px){.pupil-action-grid{grid-template-columns:1fr}.feedback-card,.pupil-summary{grid-column:auto;grid-row:auto}.pupil-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}.pupil-summary h2{grid-column:1/-1;margin-bottom:0}.summary-item,.summary-item:first-of-type{border-top:0;padding:.25rem 0}}
+.task-list-filter{max-width:360px;margin:0 0 18px}.fixed-topics{margin:0 0 20px;color:#334155}

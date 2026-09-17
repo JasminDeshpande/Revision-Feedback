@@ -5,7 +5,7 @@ const noteMessage=document.getElementById("note-message");
 function selectOptions(items,labelFn){return items.map(item=>`<option value="${item.id}">${escapeHtml(labelFn(item))}</option>`).join("");}
 function fillTaskAndTopicSelects(){
  document.getElementById("note-task").innerHTML='<option value="">-- Select task --</option>'+selectOptions(tasks,item=>item.title);
- document.getElementById("note-topic").innerHTML='<option value="">-- Select topic --</option>'+selectOptions(topics,item=>item.topic_name);
+ document.getElementById("note-topic").innerHTML='<option value="">-- Select topic --</option>'+selectOptions(topics,item=>["computer system","csystem"].includes(item.topic_name.trim().toLowerCase())?"Computer Systems":item.topic_name);
 }
 function resetNoteForm(){editingNoteId=null;document.getElementById("note-form").reset();document.getElementById("note-form-title").textContent="Add an action point";document.getElementById("note-submit").textContent="Save action point";document.getElementById("cancel-note-edit").classList.add("hidden");showMessage(noteMessage,"");}
 document.getElementById("cancel-note-edit").addEventListener("click",resetNoteForm);
@@ -17,7 +17,7 @@ async function loadReferenceData(){
   db.from("topics").select("id,topic_name").order("topic_name")
  ]);
  if(taskError||topicError)throw taskError||topicError;
- tasks=taskData||[];topics=topicData||[];fillTaskAndTopicSelects();
+ tasks=taskData||[];topics=(topicData||[]).filter(item=>["computer systems","computer system","csystem","ddd","sdd"].includes(item.topic_name.trim().toLowerCase()));fillTaskAndTopicSelects();
 }
 async function loadNotes(){
  const{data,error}=await db.from("pupil_action_points").select("*,action_point_tasks(title),topics(topic_name)").eq("pupil_id",user.id).order("created_at",{ascending:false});

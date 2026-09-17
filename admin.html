@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Teacher Dashboard</title>
-<link rel="stylesheet" href="styles.css?v=20260916-14">
+<link rel="stylesheet" href="styles.css?v=20260917-1">
 </head>
 <body>
 <header class="app-header">
@@ -205,6 +205,10 @@
 </div>
 <div class="card">
 <h3>Active tasks</h3>
+<div class="task-list-filter">
+<label for="task-list-class">Filter by class</label>
+<select id="task-list-class"><option value="">All classes</option></select>
+</div>
 <div class="table-wrap">
 <table>
 <thead>
@@ -271,11 +275,8 @@
 <section id="action-points" class="panel">
 <div class="section-heading"><h2>Pupil action points</h2><span id="teacher-action-count" class="badge amber">0 to action</span></div>
 <div class="card">
-<h3>Set up action-point topics and tasks</h3>
-<div class="grid">
-<div><label for="action-new-topic">New shared topic</label><input id="action-new-topic" placeholder="e.g. Database Design"></div>
-<div class="actions"><button id="add-action-topic" class="primary" type="button">Add topic</button></div>
-</div>
+<h3>Set up Action Point tasks</h3>
+<p class="fixed-topics"><strong>Topics:</strong> Computer Systems, DDD and SDD</p>
 <form id="action-task-form" class="grid three">
 <div><label for="action-task-class">Class</label><select id="action-task-class" required></select></div>
 <div><label for="action-task-topic">Topic</label><select id="action-task-topic" required></select></div>
@@ -304,7 +305,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="config.js">
 </script>
-<script src="admin-v10.js">
+<script src="admin-v10.js?v=20260917-1">
 </script>
 </body>
 </html>
